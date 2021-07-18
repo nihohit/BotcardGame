@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,18 +13,9 @@ public class GridScript : MonoBehaviour {
   // Start is called before the first frame update
   void Start() {
     _tilemap = GetComponent<Tilemap>();
-    _unitResources[UnitType.Cannon] = Resources.Load<GameObject>("Cannon");
-    _unitResources[UnitType.FastRocket] = Resources.Load<GameObject>("Fast Rocket");
-    _unitResources[UnitType.FastLargeTank] = Resources.Load<GameObject>("FastLargeTank");
-    _unitResources[UnitType.HeavyHoverTank] = Resources.Load<GameObject>("Heavy Hover Tank");
-    _unitResources[UnitType.HeavyTank] = Resources.Load<GameObject>("Heavy Tank");
-    _unitResources[UnitType.HoverTank] = Resources.Load<GameObject>("Hover Tank");
-    _unitResources[UnitType.LargeTank] = Resources.Load<GameObject>("Large Tank");
-    _unitResources[UnitType.Plane] = Resources.Load<GameObject>("Plane");
-    _unitResources[UnitType.Rocket] = Resources.Load<GameObject>("Rocket");
-    _unitResources[UnitType.SmallTank] = Resources.Load<GameObject>("Small Tank");
-    _unitResources[UnitType.Tank] = Resources.Load<GameObject>("Tank");
-    _unitResources[UnitType.WalkingCannon] = Resources.Load<GameObject>("Walking Cannon");
+    foreach (var value in (UnitType[])Enum.GetValues(typeof(UnitType))) {
+      _unitResources[value] = Resources.Load<GameObject>(value.ToString());
+    }
 
     Debug.Log(_tilemap.cellBounds);
     var count = 0;
@@ -37,7 +29,6 @@ public class GridScript : MonoBehaviour {
           var place = _tilemap.CellToWorld(new Vector3Int(x + 1, y + 1, z));
           if (count < _unitResources.Count) {
             UnitType foo = (UnitType)count;
-            Debug.Log($"{count} {foo}");
             var newUnit = Instantiate(_unitResources[foo]);
             newUnit.transform.position = place;
             ++count;
