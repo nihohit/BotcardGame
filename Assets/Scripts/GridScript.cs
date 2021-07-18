@@ -10,11 +10,11 @@ public class GridScript : MonoBehaviour {
   private Tilemap _tilemap;
   private HighlightFactory _highlightFactory;
   private Dictionary<UnitType, GameObject> _unitResources = new Dictionary<UnitType, GameObject>();
-  public GameObject arrow;
-  public GameObject selection;
+  private GameObject selection;
 
   // Start is called before the first frame update
   void Start() {
+    _highlightFactory = GetComponent<HighlightFactory>();
     _tilemap = GetComponent<Tilemap>();
     foreach (var value in (UnitType[])Enum.GetValues(typeof(UnitType))) {
       _unitResources[value] = Resources.Load<GameObject>(value.ToString());
@@ -38,17 +38,38 @@ public class GridScript : MonoBehaviour {
         }
       }
     }
-    var center = _tilemap.GetCellCenterWorld(Vector3Int.zero);
+  }
+
+  static readonly Vector3 adjustment = new Vector3(0, -0.15f, 0);
+  private Vector3 adjustedWorldCoordinates(Vector3 coords) {
+    return coords + adjustment;
+  }
+
+  private Vector3Int mouseOnTile() {
+    var worldCoords = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+    var result = _tilemap.WorldToCell(adjustedWorldCoordinates(worldCoords));
+    result.z = _tilemap.cellBounds.zMin;
+    return result;
   }
 
   // Update is called once per frame
   void Update() {
-
+    Vector3Int cell = mouseOnTile();
+    if (!_tilemap.HasTile(cell)) {
+      if (selection) {
+        _highlightFactory.ReturnHighlight(selection);
+        selection = null;
+      }
+      return;
+    }
+    if (!selection) {
+      selection = _highlightFactory.GetHighlight(Highlights.Selection);
+    }
+    selection.transform.position = _tilemap.GetCellCenterWorld(cell);
   }
 
   public void OnMouseDown() {
-    var position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-    Vector3Int cell = _tilemap.WorldToCell(position);
+    Vector3Int cell = mouseOnTile();
     Debug.Log(cell);
   }
 }
