@@ -8,7 +8,10 @@ public class GridScript : MonoBehaviour {
   enum UnitType { Cannon, FastRocket, FastLargeTank, HeavyHoverTank, HeavyTank, HoverTank, LargeTank, Plane, Rocket, SmallTank, Tank, WalkingCannon };
 
   private Tilemap _tilemap;
-  Dictionary<UnitType, GameObject> _unitResources = new Dictionary<UnitType, GameObject>();
+  private HighlightFactory _highlightFactory;
+  private Dictionary<UnitType, GameObject> _unitResources = new Dictionary<UnitType, GameObject>();
+  public GameObject arrow;
+  public GameObject selection;
 
   // Start is called before the first frame update
   void Start() {
@@ -17,7 +20,6 @@ public class GridScript : MonoBehaviour {
       _unitResources[value] = Resources.Load<GameObject>(value.ToString());
     }
 
-    Debug.Log(_tilemap.cellBounds);
     var count = 0;
     for (int z = _tilemap.cellBounds.zMin; z < _tilemap.cellBounds.zMax; ++z) {
       for (int x = _tilemap.cellBounds.xMin; x < _tilemap.cellBounds.xMax; ++x) {
@@ -36,6 +38,7 @@ public class GridScript : MonoBehaviour {
         }
       }
     }
+    var center = _tilemap.GetCellCenterWorld(Vector3Int.zero);
   }
 
   // Update is called once per frame
