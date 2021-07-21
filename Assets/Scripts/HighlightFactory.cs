@@ -41,7 +41,7 @@ public class HighlightFactory : MonoBehaviour {
   { Highlights.MoveTwiceUpRight, "double_arrow_up_right" },
   { Highlights.MoveTwiceUpLeft, "double_arrow_up_left" },
 };
-  private Dictionary<Highlights, Queue<GameObject>> _highlights = new Dictionary<Highlights, Queue<GameObject>>();
+  private readonly Dictionary<Highlights, Queue<GameObject>> _highlights = new Dictionary<Highlights, Queue<GameObject>>();
 
   private void Start() {
     foreach (var value in (Highlights[])Enum.GetValues(typeof(Highlights))) {
