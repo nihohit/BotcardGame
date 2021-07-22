@@ -15,10 +15,13 @@ public class SystemPanelScript : MonoBehaviour {
     _currentAction = transform.Find("ActionButton").GetComponent<Button>();
   }
 
-  void SetSystemState(SystemState state) {
+  public void SetSystemState(SystemState state) {
     if (state is null) {
       gameObject.SetActive(false);
       return;
     }
+
+    gameObject.SetActive(true);
+    _systemImage.sprite = Resources.Load<Sprite>($"systems/{state.system.systemImageFilename}");
   }
 }
