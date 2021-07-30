@@ -16,8 +16,9 @@ public class ActionEffect {
 }
 
 public abstract class Action {
-  public string actionImageFilename;
   public bool wasUsed;
+
+  public abstract string GetActionImageFilename();
 
   public abstract bool canAct(Board board, Vector2Int position);
 
@@ -33,6 +34,10 @@ public class PushMissileAction : Action {
     List<ActionEffect> effects = new List<ActionEffect>();
 
     return effects;
+  }
+
+  public override string GetActionImageFilename() {
+    return "3";
   }
 }
 

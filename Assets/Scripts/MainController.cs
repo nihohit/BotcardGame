@@ -17,7 +17,7 @@ public class MainController : MonoBehaviour {
             system = new MechSystem() {
                 systemImageFilename = "2",
             },
-            currentAction = null
+            currentAction = new PushMissileAction()
         },
         new SystemState(){
             pilot = null,
@@ -28,12 +28,12 @@ public class MainController : MonoBehaviour {
         },
     };
     for (int i = 0; i < _systemPanels.Count; ++i) {
-        var systemPanel = _systemPanels[i];
-        if (i < systems.Count) {
-            systemPanel.SetSystemState(systems[i]);
-        } else {
-            systemPanel.SetSystemState(null);
-        }
+      var systemPanel = _systemPanels[i];
+      if (i < systems.Count) {
+        systemPanel.SetSystemState(systems[i]);
+      } else {
+        systemPanel.SetSystemState(null);
+      }
     }
   }
 
