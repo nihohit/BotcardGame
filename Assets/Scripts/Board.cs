@@ -21,6 +21,11 @@ public class Board {
     return content[position.x][position.y];
   }
 
+  private void putContentAt(Vector2Int position, BoardContent newContent) {
+    content[position.x][position.y] = newContent;
+  }
+
+
   public Board NextBoard(IEnumerable<ActionEffect> effects) {
     var nextBoard = new Board();
     nextBoard.content = content
@@ -35,7 +40,19 @@ public class Board {
         continue;
       }
       contentInTile.Health -= effect.damage;
-      for (int i = 0;)
+
+      var maxValue = Math.Max(effect.move.x, effect.move.y);
+      var finalLocation = effect.position;
+      for (int i = 1; i < maxValue; ++i) {
+        var adjustedMove = effect.move * i / maxValue;
+        var position = effect.position + adjustedMove;
+        if (ContentAt(position) is null) {
+          finalLocation = position;
+        }
+      }
+      nextBoard.putContentAt(effect.position, null);
+      nextBoard.putContentAt(finalLocation, contentInTile);
+
     }
     return nextBoard;
   }

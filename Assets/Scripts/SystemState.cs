@@ -12,7 +12,7 @@ public class Pilot {
 public class ActionEffect {
   public Vector2Int position;
   public int damage;
-  public Vector2Int newPosition;
+  public Vector2Int move;
 }
 
 public abstract class Action {
