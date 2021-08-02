@@ -33,6 +33,37 @@ public class PushMissileAction : Action {
   public override List<ActionEffect> actionEffects(Board board, Vector2Int position) {
     List<ActionEffect> effects = new List<ActionEffect>();
 
+    var boardSize = board.getSize();
+
+    effects.Add(new ActionEffect() {
+      damage = 1,
+      position = position
+    });
+    if (position.x >= 0 && position.y >= 0) {
+      effects.Add(new ActionEffect() {
+        position = position + new Vector2Int(-1, -1),
+        move = new Vector2Int(-2, -2)
+      });
+    }
+    if (position.x >= 0 && position.y < boardSize.y) {
+      effects.Add(new ActionEffect() {
+        position = position + new Vector2Int(-1, 1),
+        move = new Vector2Int(-2, 2)
+      });
+    }
+    if (position.x < boardSize.x && position.y >= 0) {
+      effects.Add(new ActionEffect() {
+        position = position + new Vector2Int(1, -1),
+        move = new Vector2Int(2, -2)
+      });
+    }
+    if (position.x < boardSize.x && position.y < boardSize.y) {
+      effects.Add(new ActionEffect() {
+        position = position + new Vector2Int(1, 1),
+        move = new Vector2Int(2, 2)
+      });
+    }
+
     return effects;
   }
 
