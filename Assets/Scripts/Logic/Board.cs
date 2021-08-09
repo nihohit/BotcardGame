@@ -5,6 +5,9 @@ using System;
 
 public class BoardContent {
   public int Health;
+
+  public Guid identifier = Guid.NewGuid();
+
   public BoardContent Copy() {
     var clone = MemberwiseClone() as BoardContent;
     if (clone is null) {
@@ -34,18 +37,18 @@ public class Board {
   }
 
   public BoardContent ContentAt(Vector2Int position) {
-    return content[position.x, position.y];
+    return content[position.x, position.y]?.Copy();
   }
 
   private void putContentAt(Vector2Int position, BoardContent newContent) {
-    content[position.x, position.y] = newContent;
+    content[position.x, position.y] = newContent?.Copy();
   }
 
   private BoardContent[,] copyBoard() {
     var newContent = new BoardContent[xSize, ySize];
     for (int i = 0; i < xSize; ++i) {
       for (int j = 0; j < ySize; ++j) {
-        newContent[i, j] = content[i, j].Copy();
+        newContent[i, j] = content[i, j]?.Copy();
       }
     }
     return newContent;
