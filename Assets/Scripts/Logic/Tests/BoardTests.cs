@@ -165,6 +165,40 @@ class BoardTests {
   }
 
   [Test]
+  public void board_effects_destroy_units_with_no_health() {
+    var content1 = new BoardContent() {
+      Health = 2
+    };
+    var content2 = new BoardContent() {
+      Health = 1
+    };
+    var size = new Vector2Int(4, 4);
+    var board = Board.CreateBoard(size, new[] {
+      Tuple.Create(content1, new Vector2Int(0, 1)),
+      Tuple.Create(content2, new Vector2Int(2, 1)) }).NextBoard(new[] { new ActionEffect() {
+        position = new Vector2Int(0, 1),
+        move = new Vector2Int(2, 0)
+      }});
+
+    Assert.That(board.getSize() == size);
+    CollectionAssert.AreEqual(new[] { content1.identifier }, board.GetAllContent());
+    Assert.That(board.positionOfContent(content1.identifier) == new Vector2Int(1, 1));
+
+    for (int i = 0; i < size.x; ++i) {
+      for (int j = 0; j < size.y; ++j) {
+        var position = new Vector2Int(i, j);
+        var content = board.ContentAt(position);
+        if (position == board.positionOfContent(content1.identifier)) {
+          Assert.That(content.identifier == content1.identifier);
+          Assert.That(content.Health == content1.Health - 1);
+        } else {
+          Assert.That(content is null);
+        }
+      }
+    }
+  }
+
+  [Test]
   public void board_effect_damage() {
     var content1 = new BoardContent() {
       Health = 1

@@ -4,7 +4,7 @@ using System.Linq;
 using System;
 
 public class BoardContent {
-  public int Health;
+  public int Health = 1;
 
   public Guid identifier = Guid.NewGuid();
 
@@ -54,9 +54,16 @@ public class Board {
   }
 
   private void putContentAt(Vector2Int position, BoardContent newContent) {
-    content[position.x, position.y] = newContent?.Copy();
-    if (newContent != null) {
+    if (newContent is null) {
+      content[position.x, position.y] = null;
+      return;
+    }
+    if (newContent.Health <= 0) {
+      content[position.x, position.y] = null;
+      positions.Remove(newContent.identifier);
+    } else {
       positions[newContent.identifier] = position;
+      content[position.x, position.y] = newContent?.Copy();
     }
   }
 
