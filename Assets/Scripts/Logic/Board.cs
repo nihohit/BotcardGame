@@ -19,6 +19,7 @@ public class BoardContent {
 
 public class Board {
   private BoardContent[,] content;
+  private Dictionary<Guid, Vector2Int> positions = new Dictionary<Guid, Vector2Int>();
 
   private int xSize {
     get {
@@ -32,6 +33,14 @@ public class Board {
     }
   }
 
+  public Vector2Int positionOfContent(Guid identifier) {
+    return positions[identifier];
+  }
+
+  public BoardContent getContent(Guid identifier) {
+    return ContentAt(positions[identifier]);
+  }
+
   public Vector2Int getSize() {
     return new Vector2Int(xSize, ySize);
   }
@@ -42,6 +51,9 @@ public class Board {
 
   private void putContentAt(Vector2Int position, BoardContent newContent) {
     content[position.x, position.y] = newContent?.Copy();
+    if (newContent != null) {
+      positions[newContent.identifier] = position;
+    }
   }
 
   private BoardContent[,] copyBoard() {
@@ -79,6 +91,7 @@ public class Board {
   public Board NextBoard(IEnumerable<ActionEffect> effects) {
     var nextBoard = new Board();
     nextBoard.content = copyBoard();
+    nextBoard.positions = positions;
 
     foreach (var effect in effects) {
       var contentInTile = ContentAt(effect.position);

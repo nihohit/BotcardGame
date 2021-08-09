@@ -66,16 +66,21 @@ class BoardTests {
       }});
 
     Assert.That(board.getSize() == size);
+    Assert.That(board.positionOfContent(content1.identifier) == new Vector2Int(0, 3));
+    Assert.That(board.positionOfContent(content2.identifier) == new Vector2Int(2, 1));
+
     for (int i = 0; i < size.x; ++i) {
       for (int j = 0; j < size.y; ++j) {
-        if (i == 0 && j == 3) {
-          Assert.That(board.ContentAt(new Vector2Int(i, j)).identifier == content1.identifier);
-          Assert.That(board.ContentAt(new Vector2Int(i, j)).Health == content1.Health);
-        } else if (i == 2 && j == 1) {
-          Assert.That(board.ContentAt(new Vector2Int(i, j)).identifier == content2.identifier);
-          Assert.That(board.ContentAt(new Vector2Int(i, j)).Health == content2.Health);
+        var position = new Vector2Int(i, j);
+        var content = board.ContentAt(position);
+        if (position == board.positionOfContent(content1.identifier)) {
+          Assert.That(content.identifier == content1.identifier);
+          Assert.That(content.Health == content1.Health);
+        } else if (position == board.positionOfContent(content2.identifier)) {
+          Assert.That(content.identifier == content2.identifier);
+          Assert.That(content.Health == content2.Health);
         } else {
-          Assert.That(board.ContentAt(new Vector2Int(i, j)) is null);
+          Assert.That(content is null);
         }
       }
     }
@@ -98,16 +103,21 @@ class BoardTests {
       }});
 
     Assert.That(board.getSize() == size);
+    Assert.That(board.positionOfContent(content1.identifier) == new Vector2Int(0, 1));
+    Assert.That(board.positionOfContent(content2.identifier) == new Vector2Int(2, 1));
+
     for (int i = 0; i < size.x; ++i) {
       for (int j = 0; j < size.y; ++j) {
-        if (i == 0 && j == 1) {
-          Assert.That(board.ContentAt(new Vector2Int(i, j)).identifier == content1.identifier);
-          Assert.That(board.ContentAt(new Vector2Int(i, j)).Health == content1.Health);
-        } else if (i == 2 && j == 1) {
-          Assert.That(board.ContentAt(new Vector2Int(i, j)).identifier == content2.identifier);
-          Assert.That(board.ContentAt(new Vector2Int(i, j)).Health == content2.Health);
+        var position = new Vector2Int(i, j);
+        var content = board.ContentAt(position);
+        if (position == board.positionOfContent(content1.identifier)) {
+          Assert.That(content.identifier == content1.identifier);
+          Assert.That(content.Health == content1.Health);
+        } else if (position == board.positionOfContent(content2.identifier)) {
+          Assert.That(content.identifier == content2.identifier);
+          Assert.That(content.Health == content2.Health);
         } else {
-          Assert.That(board.ContentAt(new Vector2Int(i, j)) is null);
+          Assert.That(content is null);
         }
       }
     }
@@ -130,16 +140,21 @@ class BoardTests {
       }});
 
     Assert.That(board.getSize() == size);
+    Assert.That(board.positionOfContent(content1.identifier) == new Vector2Int(1, 1));
+    Assert.That(board.positionOfContent(content2.identifier) == new Vector2Int(2, 1));
+
     for (int i = 0; i < size.x; ++i) {
       for (int j = 0; j < size.y; ++j) {
-        if (i == 1 && j == 1) {
-          Assert.That(board.ContentAt(new Vector2Int(i, j)).identifier == content1.identifier);
-          Assert.That(board.ContentAt(new Vector2Int(i, j)).Health == content1.Health - 1);
-        } else if (i == 2 && j == 1) {
-          Assert.That(board.ContentAt(new Vector2Int(i, j)).identifier == content2.identifier);
-          Assert.That(board.ContentAt(new Vector2Int(i, j)).Health == content2.Health - 1);
+        var position = new Vector2Int(i, j);
+        var content = board.ContentAt(position);
+        if (position == board.positionOfContent(content1.identifier)) {
+          Assert.That(content.identifier == content1.identifier);
+          Assert.That(content.Health == content1.Health - 1);
+        } else if (position == board.positionOfContent(content2.identifier)) {
+          Assert.That(content.identifier == content2.identifier);
+          Assert.That(content.Health == content2.Health - 1);
         } else {
-          Assert.That(board.ContentAt(new Vector2Int(i, j)) is null);
+          Assert.That(content is null);
         }
       }
     }
@@ -162,16 +177,21 @@ class BoardTests {
       }});
 
     Assert.That(board.getSize() == size);
+    Assert.That(board.positionOfContent(content1.identifier) == new Vector2Int(0, 1));
+    Assert.That(board.positionOfContent(content2.identifier) == new Vector2Int(2, 1));
+
     for (int i = 0; i < size.x; ++i) {
       for (int j = 0; j < size.y; ++j) {
-        if (i == 0 && j == 1) {
-          Assert.That(board.ContentAt(new Vector2Int(i, j)).identifier == content1.identifier);
-          Assert.That(board.ContentAt(new Vector2Int(i, j)).Health == content1.Health);
-        } else if (i == 2 && j == 1) {
-          Assert.That(board.ContentAt(new Vector2Int(i, j)).identifier == content2.identifier);
-          Assert.That(board.ContentAt(new Vector2Int(i, j)).Health == 1);
+        var position = new Vector2Int(i, j);
+        var content = board.ContentAt(position);
+        if (position == board.positionOfContent(content1.identifier)) {
+          Assert.That(content.identifier == content1.identifier);
+          Assert.That(content.Health == content1.Health);
+        } else if (position == board.positionOfContent(content2.identifier)) {
+          Assert.That(content.identifier == content2.identifier);
+          Assert.That(content.Health == content2.Health - 1);
         } else {
-          Assert.That(board.ContentAt(new Vector2Int(i, j)) is null);
+          Assert.That(content is null);
         }
       }
     }
@@ -199,16 +219,21 @@ class BoardTests {
       }});
 
     Assert.That(board.getSize() == size);
+    Assert.That(board.positionOfContent(content1.identifier) == new Vector2Int(0, 3));
+    Assert.That(board.positionOfContent(content2.identifier) == new Vector2Int(2, 1));
+
     for (int i = 0; i < size.x; ++i) {
       for (int j = 0; j < size.y; ++j) {
-        if (i == 0 && j == 3) {
-          Assert.That(board.ContentAt(new Vector2Int(i, j)).identifier == content1.identifier);
-          Assert.That(board.ContentAt(new Vector2Int(i, j)).Health == 2);
-        } else if (i == 2 && j == 1) {
-          Assert.That(board.ContentAt(new Vector2Int(i, j)).identifier == content2.identifier);
-          Assert.That(board.ContentAt(new Vector2Int(i, j)).Health == 1);
+        var position = new Vector2Int(i, j);
+        var content = board.ContentAt(position);
+        if (position == board.positionOfContent(content1.identifier)) {
+          Assert.That(content.identifier == content1.identifier);
+          Assert.That(content.Health == content1.Health - 1);
+        } else if (position == board.positionOfContent(content2.identifier)) {
+          Assert.That(content.identifier == content2.identifier);
+          Assert.That(content.Health == content2.Health - 1);
         } else {
-          Assert.That(board.ContentAt(new Vector2Int(i, j)) is null);
+          Assert.That(content is null);
         }
       }
     }
