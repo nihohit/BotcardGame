@@ -89,6 +89,7 @@ public class Board {
 
       var maxValue = Math.Max(effect.move.x, effect.move.y);
       var finalLocation = effect.position;
+      for (int i = 1; i <= maxValue; ++i) {
         var adjustedMove = effect.move * i / maxValue;
         var position = effect.position + adjustedMove;
         if (withinBounds(position) && ContentAt(position) is null) {
