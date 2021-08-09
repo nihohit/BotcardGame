@@ -82,6 +82,70 @@ class BoardTests {
   }
 
   [Test]
+  public void board_effects_dont_move_off_grid() {
+    var content1 = new BoardContent() {
+      Health = 1
+    };
+    var content2 = new BoardContent() {
+      Health = 2
+    };
+    var size = new Vector2Int(4, 4);
+    var board = Board.CreateBoard(size, new[] {
+      Tuple.Create(content1, new Vector2Int(0, 1)),
+      Tuple.Create(content2, new Vector2Int(2, 1)) }).NextBoard(new[] { new ActionEffect() {
+        position = new Vector2Int(0, 1),
+        move = new Vector2Int(-1, 0)
+      }});
+
+    Assert.That(board.getSize() == size);
+    for (int i = 0; i < size.x; ++i) {
+      for (int j = 0; j < size.y; ++j) {
+        if (i == 0 && j == 1) {
+          Assert.That(board.ContentAt(new Vector2Int(i, j)).identifier == content1.identifier);
+          Assert.That(board.ContentAt(new Vector2Int(i, j)).Health == content1.Health);
+        } else if (i == 2 && j == 1) {
+          Assert.That(board.ContentAt(new Vector2Int(i, j)).identifier == content2.identifier);
+          Assert.That(board.ContentAt(new Vector2Int(i, j)).Health == content2.Health);
+        } else {
+          Assert.That(board.ContentAt(new Vector2Int(i, j)) is null);
+        }
+      }
+    }
+  }
+
+  [Test]
+  public void board_effects_move_damge_and_stop_on_collision() {
+    var content1 = new BoardContent() {
+      Health = 2
+    };
+    var content2 = new BoardContent() {
+      Health = 2
+    };
+    var size = new Vector2Int(4, 4);
+    var board = Board.CreateBoard(size, new[] {
+      Tuple.Create(content1, new Vector2Int(0, 1)),
+      Tuple.Create(content2, new Vector2Int(2, 1)) }).NextBoard(new[] { new ActionEffect() {
+        position = new Vector2Int(0, 1),
+        move = new Vector2Int(2, 0)
+      }});
+
+    Assert.That(board.getSize() == size);
+    for (int i = 0; i < size.x; ++i) {
+      for (int j = 0; j < size.y; ++j) {
+        if (i == 1 && j == 1) {
+          Assert.That(board.ContentAt(new Vector2Int(i, j)).identifier == content1.identifier);
+          Assert.That(board.ContentAt(new Vector2Int(i, j)).Health == content1.Health - 1);
+        } else if (i == 2 && j == 1) {
+          Assert.That(board.ContentAt(new Vector2Int(i, j)).identifier == content2.identifier);
+          Assert.That(board.ContentAt(new Vector2Int(i, j)).Health == content2.Health - 1);
+        } else {
+          Assert.That(board.ContentAt(new Vector2Int(i, j)) is null);
+        }
+      }
+    }
+  }
+
+  [Test]
   public void board_effect_damage() {
     var content1 = new BoardContent() {
       Health = 1

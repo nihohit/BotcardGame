@@ -92,8 +92,16 @@ public class Board {
       for (int i = 1; i <= maxValue; ++i) {
         var adjustedMove = effect.move * i / maxValue;
         var position = effect.position + adjustedMove;
-        if (withinBounds(position) && ContentAt(position) is null) {
+        if (!withinBounds(position)) {
+          break;
+        } else if (ContentAt(position) is null) {
           finalLocation = position;
+        } else {
+          var collided = nextBoard.ContentAt(position);
+          collided.Health -= 1;
+          nextBoard.putContentAt(position, collided);
+          contentInTile.Health -= 1;
+          break;
         }
       }
       nextBoard.putContentAt(effect.position, null);
