@@ -36,6 +36,7 @@ class BoardTests {
       Tuple.Create(content2, new Vector2Int(2, 1)) });
 
     Assert.That(board.getSize() == new Vector2Int(3, 3));
+    CollectionAssert.AreEqual(new[] { content1.identifier, content2.identifier }, board.GetAllContent());
     for (int i = 0; i < 3; ++i) {
       for (int j = 0; j < 3; ++j) {
         if (i == 0 && j == 1) {
@@ -66,6 +67,7 @@ class BoardTests {
       }});
 
     Assert.That(board.getSize() == size);
+    CollectionAssert.AreEqual(new[] { content1.identifier, content2.identifier }, board.GetAllContent());
     Assert.That(board.positionOfContent(content1.identifier) == new Vector2Int(0, 3));
     Assert.That(board.positionOfContent(content2.identifier) == new Vector2Int(2, 1));
 
@@ -103,6 +105,7 @@ class BoardTests {
       }});
 
     Assert.That(board.getSize() == size);
+    CollectionAssert.AreEqual(new[] { content1.identifier, content2.identifier }, board.GetAllContent());
     Assert.That(board.positionOfContent(content1.identifier) == new Vector2Int(0, 1));
     Assert.That(board.positionOfContent(content2.identifier) == new Vector2Int(2, 1));
 
@@ -140,6 +143,7 @@ class BoardTests {
       }});
 
     Assert.That(board.getSize() == size);
+    CollectionAssert.AreEqual(new[] { content1.identifier, content2.identifier }, board.GetAllContent());
     Assert.That(board.positionOfContent(content1.identifier) == new Vector2Int(1, 1));
     Assert.That(board.positionOfContent(content2.identifier) == new Vector2Int(2, 1));
 
@@ -177,6 +181,7 @@ class BoardTests {
       }});
 
     Assert.That(board.getSize() == size);
+    CollectionAssert.AreEqual(new[] { content1.identifier, content2.identifier }, board.GetAllContent());
     Assert.That(board.positionOfContent(content1.identifier) == new Vector2Int(0, 1));
     Assert.That(board.positionOfContent(content2.identifier) == new Vector2Int(2, 1));
 
@@ -219,6 +224,7 @@ class BoardTests {
       }});
 
     Assert.That(board.getSize() == size);
+    CollectionAssert.AreEqual(new[] { content1.identifier, content2.identifier }, board.GetAllContent());
     Assert.That(board.positionOfContent(content1.identifier) == new Vector2Int(0, 3));
     Assert.That(board.positionOfContent(content2.identifier) == new Vector2Int(2, 1));
 

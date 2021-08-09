@@ -49,6 +49,10 @@ public class Board {
     return content[position.x, position.y]?.Copy();
   }
 
+  public IEnumerable<Guid> GetAllContent() {
+    return positions.Keys;
+  }
+
   private void putContentAt(Vector2Int position, BoardContent newContent) {
     content[position.x, position.y] = newContent?.Copy();
     if (newContent != null) {
