@@ -19,7 +19,6 @@ public class GridScript : MonoBehaviour {
     foreach (var value in (UnitType[])Enum.GetValues(typeof(UnitType))) {
       _unitResources[value] = Resources.Load<GameObject>(value.ToString());
     }
-    Debug.Log($"size is: {_unitResources.Count}");
     var count = 0;
     for (int z = _tilemap.cellBounds.zMin; z < _tilemap.cellBounds.zMax; ++z) {
       for (int x = _tilemap.cellBounds.xMin; x < _tilemap.cellBounds.xMax; ++x) {
@@ -28,13 +27,10 @@ public class GridScript : MonoBehaviour {
             break;
           }
           if (!_tilemap.HasTile(new Vector3Int(x, y, z))) {
-            Debug.Log($"missing {new Vector3Int(x, y, z)}");
             continue;
           }
-          Debug.Log($"found {new Vector3Int(x, y, z)}");
           // TODO: why is the +1 necesary?
           var place = _tilemap.CellToWorld(new Vector3Int(x + 1, y + 1, z));
-          Debug.Log($"instantiating at {place}");
           UnitType foo = (UnitType)count;
           var newUnit = Instantiate(_unitResources[foo]);
           newUnit.transform.position = place;
