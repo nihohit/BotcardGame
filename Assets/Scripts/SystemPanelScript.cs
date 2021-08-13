@@ -8,7 +8,7 @@ public class SystemPanelScript : MonoBehaviour {
   private Button _currentAction;
 
   // Start is called before the first frame update
-  void Start() {
+  void Awake() {
     _systemImage = transform.Find("SystemImage").GetComponent<Image>();
     _pilotsDropdown = transform.Find("PilotDropdown").GetComponent<Dropdown>();
     _currentPilot = transform.Find("PilotDropdown").GetComponent<Image>();
