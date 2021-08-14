@@ -3,6 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Linq;
+
+public class HighlightInfo {
+  public Highlights highlight;
+  public Vector2Int cell;
+}
 
 public class GridScript : MonoBehaviour {
   enum UnitType { Cannon, FastRocket, FastLargeTank, HeavyHoverTank, HeavyTank, HoverTank, LargeTank, Plane, Rocket, SmallTank, Tank, WalkingCannon };
@@ -10,7 +16,7 @@ public class GridScript : MonoBehaviour {
   private Tilemap _tilemap;
   private HighlightFactory _highlightFactory;
   private Dictionary<UnitType, GameObject> _unitResources = new Dictionary<UnitType, GameObject>();
-  private GameObject selection;
+  private List<GameObject> _highlights;
 
   // Start is called before the first frame update
   void Start() {
@@ -54,24 +60,33 @@ public class GridScript : MonoBehaviour {
     return result;
   }
 
-  // Update is called once per frame
-  void Update() {
-    Vector3Int cell = mouseOnTile();
-    if (!_tilemap.HasTile(cell)) {
-      if (selection) {
-        _highlightFactory.ReturnHighlight(selection);
-        selection = null;
+  public Nullable<Vector3Int> MouseOnTile() {
+    var tile = mouseOnTile();
+    return _tilemap.HasTile(tile) ? tile : null;
+  }
+
+  private void setHighlight(HighlightInfo info) {
+    var selection = _highlightFactory.GetHighlight(info.highlight);
+    selection.transform.position = _tilemap.GetCellCenterWorld(info.cell);
+    _highlights.Add(selection);
+  }
+
+  private void freeHightlights() {
+    if (!(_highlights is null)) {
+      foreach (var highlight in _highlights) {
+        _highlightFactory.ReturnHighlight(highlight);
       }
-      return;
+      _highlights = null;
     }
-    if (!selection) {
-      selection = _highlightFactory.GetHighlight(Highlights.Selection);
-    }
-    selection.transform.position = _tilemap.GetCellCenterWorld(cell);
   }
 
   public void OnMouseDown() {
     Vector3Int cell = mouseOnTile();
     Debug.Log(cell);
+  }
+
+  public void SetHightlights(IEnumerable<HighlightInfo> highlights) {
+    freeHightlights();
+    highlights.forEach(setHighlight);
   }
 }

@@ -2,12 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 public class MainController : MonoBehaviour {
   private List<SystemPanelScript> _systemPanels;
+  private Board _board;
+  private GridScript _grid;
 
   // Start is called before the first frame update
   void Start() {
+    _grid = FindObjectsOfType<GridScript>().First();
+    _board = Board.CreateBoard(new Vector2Int(4, 4), new Tuple<BoardContent, Vector2Int>[] { });
     _systemPanels = FindObjectsOfType<SystemPanelScript>()
         .OrderBy((systemPanel) => systemPanel.gameObject.name)
         .ToList();
