@@ -3,23 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum Highlights {
-  Selection,
-  Damage,
-  MoveOnceDown,
-  MoveOnceLeft,
-  MoveOnceRight,
-  MoveOnceUp,
-  MoveOnceDownRight,
-  MoveOnceDownLeft,
-  MoveOnceUpRight,
-  MoveOnceUpLeft,
-  MoveTwiceDownRight,
-  MoveTwiceDownLeft,
-  MoveTwiceUpRight,
-  MoveTwiceUpLeft
-}
-
 public class Highlight : MonoBehaviour {
   public Highlights highlight;
 }

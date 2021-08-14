@@ -9,10 +9,29 @@ public class Pilot {
   public string pilotImageFilename;
 }
 
+public enum Highlights {
+  Selection,
+  Damage,
+  MoveOnceDown,
+  MoveOnceLeft,
+  MoveOnceRight,
+  MoveOnceUp,
+  MoveOnceDownRight,
+  MoveOnceDownLeft,
+  MoveOnceUpRight,
+  MoveOnceUpLeft,
+  MoveTwiceDownRight,
+  MoveTwiceDownLeft,
+  MoveTwiceUpRight,
+  MoveTwiceUpLeft
+}
+
 public class ActionEffect {
   public Vector2Int position;
   public int damage;
   public Vector2Int move;
+
+  public Highlights highlight;
 }
 
 public abstract class Action {
