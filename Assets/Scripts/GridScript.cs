@@ -16,7 +16,7 @@ public class GridScript : MonoBehaviour {
   private Tilemap _tilemap;
   private HighlightFactory _highlightFactory;
   private Dictionary<UnitType, GameObject> _unitResources = new Dictionary<UnitType, GameObject>();
-  private List<GameObject> _highlights;
+  private List<GameObject> _highlights = new List<GameObject>();
 
   // Start is called before the first frame update
   void Start() {
@@ -60,24 +60,20 @@ public class GridScript : MonoBehaviour {
     return result;
   }
 
-  public Nullable<Vector3Int> MouseOnTile() {
+  public Vector3Int? MouseOnTile() {
     var tile = mouseOnTile();
-    return _tilemap.HasTile(tile) ? tile : null;
+    return _tilemap.HasTile(tile) ? tile : null as Nullable<Vector3Int>;
   }
 
   private void setHighlight(HighlightInfo info) {
     var selection = _highlightFactory.GetHighlight(info.highlight);
-    selection.transform.position = _tilemap.GetCellCenterWorld(info.cell);
+    selection.transform.position = _tilemap.GetCellCenterWorld(new Vector3Int(info.cell.x, info.cell.y, 0));
     _highlights.Add(selection);
   }
 
-  private void freeHightlights() {
-    if (!(_highlights is null)) {
-      foreach (var highlight in _highlights) {
-        _highlightFactory.ReturnHighlight(highlight);
-      }
-      _highlights = null;
-    }
+  public void FreeHightlights() {
+    _highlights.ForEach(highlight => _highlightFactory.ReturnHighlight(highlight));
+    _highlights.Clear();
   }
 
   public void OnMouseDown() {
@@ -86,7 +82,7 @@ public class GridScript : MonoBehaviour {
   }
 
   public void SetHightlights(IEnumerable<HighlightInfo> highlights) {
-    freeHightlights();
-    highlights.forEach(setHighlight);
+    FreeHightlights();
+    foreach (var highlight in highlights) { setHighlight(highlight); }
   }
 }

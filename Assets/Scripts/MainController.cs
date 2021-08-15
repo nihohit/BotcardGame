@@ -44,6 +44,16 @@ public class MainController : MonoBehaviour {
 
   // Update is called once per frame
   void Update() {
-
+    var currentTile = _grid.MouseOnTile();
+    if (currentTile is null) {
+      _grid.FreeHightlights();
+    } else {
+      var tile = currentTile.GetValueOrDefault();
+      _grid.SetHightlights(new[]{new HighlightInfo() {
+        cell = new Vector2Int(tile.x, tile.y),
+        highlight = Highlights.Selection
+      }
+    });
+    }
   }
 }
