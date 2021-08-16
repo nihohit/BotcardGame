@@ -8,6 +8,8 @@ public class MainController : MonoBehaviour {
   private List<SystemPanelScript> _systemPanels;
   private Board _board;
   private GridScript _grid;
+  private Action _selectedAction;
+  private List<SystemState> _systems;
 
   // Start is called before the first frame update
   void Start() {
@@ -16,7 +18,7 @@ public class MainController : MonoBehaviour {
     _systemPanels = FindObjectsOfType<SystemPanelScript>()
         .OrderBy((systemPanel) => systemPanel.gameObject.name)
         .ToList();
-    var systems = new List<SystemState>{
+    _systems = new List<SystemState>{
         new SystemState(){
             pilot = null,
             system = new MechSystem() {
@@ -34,26 +36,48 @@ public class MainController : MonoBehaviour {
     };
     for (int i = 0; i < _systemPanels.Count; ++i) {
       var systemPanel = _systemPanels[i];
-      if (i < systems.Count) {
-        systemPanel.SetSystemState(systems[i]);
+      systemPanel.Index = i;
+      if (i < _systems.Count) {
+        systemPanel.SetSystemState(_systems[i]);
       } else {
         systemPanel.SetSystemState(null);
       }
     }
   }
 
-  // Update is called once per frame
-  void Update() {
+  private void handleInput() {
+    if (Input.GetMouseButtonDown(1)) {
+      _selectedAction = null;
+    }
+  }
+
+  private void handleHighlights() {
     var currentTile = _grid.MouseOnTile();
     if (currentTile is null) {
       _grid.FreeHightlights();
-    } else {
-      var tile = currentTile.GetValueOrDefault();
-      _grid.SetHightlights(new[]{new HighlightInfo() {
+      return;
+    }
+
+    var tile = currentTile.GetValueOrDefault();
+    Debug.Log(tile);
+    var highlights = _selectedAction is null ? new[]{new HighlightInfo() {
         cell = new Vector2Int(tile.x, tile.y),
         highlight = Highlights.Selection
       }
+    } : _selectedAction.actionEffects(_board, tile).Select(effect => new HighlightInfo() {
+      cell = effect.position,
+      highlight = effect.highlight
     });
-    }
+    _grid.SetHightlights(highlights);
+  }
+
+  // Update is called once per frame
+  void Update() {
+    handleInput();
+    handleHighlights();
+  }
+
+  public void ActionSelected(SystemPanelScript panel) {
+    _selectedAction = _systems[panel.Index].currentAction;
   }
 }
