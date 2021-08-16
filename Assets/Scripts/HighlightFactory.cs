@@ -19,10 +19,10 @@ public class HighlightFactory : MonoBehaviour {
   { Highlights.MoveOnceDownLeft, "single_arrow_down_left" },
   { Highlights.MoveOnceUpRight, "single_arrow_up_right" },
   { Highlights.MoveOnceUpLeft, "single_arrow_up_left" },
-  { Highlights.MoveTwiceDownRight, "double_arrow_down_right" },
-  { Highlights.MoveTwiceDownLeft, "double_arrow_down_left" },
-  { Highlights.MoveTwiceUpRight, "double_arrow_up_right" },
-  { Highlights.MoveTwiceUpLeft, "double_arrow_up_left" },
+  { Highlights.MoveTwiceRight, "double_arrow_down_right" },
+  { Highlights.MoveTwiceDown, "double_arrow_down_left" },
+  { Highlights.MoveTwiceUp, "double_arrow_up_right" },
+  { Highlights.MoveTwiceLeft, "double_arrow_up_left" },
 };
   private readonly Dictionary<Highlights, Queue<GameObject>> _highlights = new Dictionary<Highlights, Queue<GameObject>>();
 
@@ -45,6 +45,7 @@ public class HighlightFactory : MonoBehaviour {
     }
 
     var obj = Instantiate(Resources.Load<GameObject>($"highlights/{_highlightToFilename[highlight]}"));
+    obj.GetComponent<SpriteRenderer>().sortingLayerName = "UI";
     var highlightComponent = obj.AddComponent<Highlight>();
     highlightComponent.highlight = highlight;
     return obj;

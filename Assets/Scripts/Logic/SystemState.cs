@@ -20,10 +20,10 @@ public enum Highlights {
   MoveOnceDownLeft,
   MoveOnceUpRight,
   MoveOnceUpLeft,
-  MoveTwiceDownRight,
-  MoveTwiceDownLeft,
-  MoveTwiceUpRight,
-  MoveTwiceUpLeft
+  MoveTwiceDown,
+  MoveTwiceLeft,
+  MoveTwiceRight,
+  MoveTwiceUp
 }
 
 public class ActionEffect {
@@ -41,7 +41,7 @@ public abstract class Action {
 
   public abstract bool canAct(Board board, Vector2Int position);
 
-  public abstract List<ActionEffect> actionEffects(Board board, Vector2Int position);
+  public abstract IEnumerable<ActionEffect> actionEffects(Board board, Vector2Int position);
 }
 
 public class PushMissileAction : Action {
@@ -49,37 +49,42 @@ public class PushMissileAction : Action {
     return true;
   }
 
-  public override List<ActionEffect> actionEffects(Board board, Vector2Int position) {
+  public override IEnumerable<ActionEffect> actionEffects(Board board, Vector2Int position) {
     List<ActionEffect> effects = new List<ActionEffect>();
 
     var boardSize = board.getSize();
 
     effects.Add(new ActionEffect() {
       damage = 1,
-      position = position
+      position = position,
+      highlight = Highlights.Damage
     });
-    if (position.x >= 0 && position.y >= 0) {
+    if (position.y > 0) {
       effects.Add(new ActionEffect() {
-        position = position + new Vector2Int(-1, -1),
-        move = new Vector2Int(-2, -2)
+        position = position + new Vector2Int(0, -1),
+        move = new Vector2Int(0, -2),
+        highlight = Highlights.MoveTwiceRight
       });
     }
-    if (position.x >= 0 && position.y < boardSize.y) {
+    if (position.x > 0) {
       effects.Add(new ActionEffect() {
-        position = position + new Vector2Int(-1, 1),
-        move = new Vector2Int(-2, 2)
+        position = position + new Vector2Int(-1, 0),
+        move = new Vector2Int(-2, 0),
+        highlight = Highlights.MoveTwiceDown
       });
     }
-    if (position.x < boardSize.x && position.y >= 0) {
+    if (position.x < boardSize.x - 1) {
       effects.Add(new ActionEffect() {
-        position = position + new Vector2Int(1, -1),
-        move = new Vector2Int(2, -2)
+        position = position + new Vector2Int(1, 0),
+        move = new Vector2Int(2, 0),
+        highlight = Highlights.MoveTwiceUp
       });
     }
-    if (position.x < boardSize.x && position.y < boardSize.y) {
+    if (position.y < boardSize.y - 1) {
       effects.Add(new ActionEffect() {
-        position = position + new Vector2Int(1, 1),
-        move = new Vector2Int(2, 2)
+        position = position + new Vector2Int(0, 1),
+        move = new Vector2Int(0, 2),
+        highlight = Highlights.MoveTwiceLeft
       });
     }
 
