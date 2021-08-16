@@ -59,7 +59,6 @@ public class MainController : MonoBehaviour {
     }
 
     var tile = currentTile.GetValueOrDefault();
-    Debug.Log(tile);
     var highlights = _selectedAction is null ? new[]{new HighlightInfo() {
         cell = new Vector2Int(tile.x, tile.y),
         highlight = Highlights.Selection
