@@ -60,14 +60,18 @@ public class GridScript : MonoBehaviour {
     return result;
   }
 
-  public Vector3Int? MouseOnTile() {
+  public Vector2Int? MouseOnTile() {
     var tile = mouseOnTile();
-    return _tilemap.HasTile(tile) ? tile : null as Nullable<Vector3Int>;
+    return _tilemap.HasTile(tile) ? new Vector2Int(tile.x, tile.y) : null as Nullable<Vector2Int>;
+  }
+
+  private Vector3Int adjustBoardCell(Vector2Int cell) {
+    return new Vector3Int(cell.x, cell.y, 0);
   }
 
   private void setHighlight(HighlightInfo info) {
     var selection = _highlightFactory.GetHighlight(info.highlight);
-    selection.transform.position = _tilemap.GetCellCenterWorld(new Vector3Int(info.cell.x, info.cell.y, 0));
+    selection.transform.position = _tilemap.GetCellCenterWorld(adjustBoardCell(info.cell));
     _highlights.Add(selection);
   }
 
