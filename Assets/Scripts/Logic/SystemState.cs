@@ -32,6 +32,10 @@ public class ActionEffect {
   public Vector2Int move;
 
   public Highlights highlight;
+
+  public Vector2Int NextPosition() {
+    return position + move;
+  }
 }
 
 public abstract class Action {
@@ -93,6 +97,24 @@ public class PushMissileAction : Action {
 
   public override string GetActionImageFilename() {
     return "3";
+  }
+}
+
+public class ShootLaserAction : Action {
+  public override bool canAct(Board board, Vector2Int position) {
+    return board.ContentAt(position) != null;
+  }
+
+  public override IEnumerable<ActionEffect> actionEffects(Board board, Vector2Int position) {
+    return new[]{new ActionEffect() {
+        damage = 4,
+        position = position,
+        highlight = Highlights.Damage
+      }};
+  }
+
+  public override string GetActionImageFilename() {
+    return "2";
   }
 }
 

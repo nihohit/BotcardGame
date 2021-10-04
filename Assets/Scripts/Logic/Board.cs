@@ -3,10 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
+public enum UnitType { Cannon, FastRocket, FastLargeTank, HeavyHoverTank, HeavyTank, HoverTank, LargeTank, Plane, Rocket, SmallTank, Tank, WalkingCannon };
+
+public class VisualInfo {
+  public UnitType type;
+}
+
 public class BoardContent {
   public int Health = 1;
 
   public Guid identifier = Guid.NewGuid();
+
+  public VisualInfo visualInfo;
 
   public BoardContent Copy() {
     var clone = MemberwiseClone() as BoardContent;
@@ -38,7 +46,10 @@ public class Board {
   }
 
   public BoardContent getContent(Guid identifier) {
-    return ContentAt(positions[identifier]);
+    if (!positions.TryGetValue(identifier, out Vector2Int position)) {
+      return null;
+    }
+    return ContentAt(position);
   }
 
   public Vector2Int getSize() {
@@ -102,7 +113,8 @@ public class Board {
   public Board NextBoard(IEnumerable<ActionEffect> effects) {
     var nextBoard = new Board();
     nextBoard.content = copyBoard();
-    nextBoard.positions = positions;
+    nextBoard.positions = positions.ToDictionary(entry => entry.Key,
+                                                 entry => entry.Value);
 
     foreach (var effect in effects) {
       var contentInTile = ContentAt(effect.position);

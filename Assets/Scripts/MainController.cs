@@ -14,7 +14,14 @@ public class MainController : MonoBehaviour {
   // Start is called before the first frame update
   void Start() {
     _grid = FindObjectsOfType<GridScript>().First();
-    _board = Board.CreateBoard(new Vector2Int(4, 4), new Tuple<BoardContent, Vector2Int>[] { });
+    _board = Board.CreateBoard(new Vector2Int(4, 4), new Tuple<BoardContent, Vector2Int>[] {
+      new Tuple<BoardContent, Vector2Int>(new BoardContent(){Health = 2, visualInfo = new VisualInfo() { type = UnitType.Cannon}}, new Vector2Int(1,0)),
+      new Tuple<BoardContent, Vector2Int>(new BoardContent(){Health = 3, visualInfo = new VisualInfo() { type = UnitType.HoverTank}}, new Vector2Int(2,1)),
+      new Tuple<BoardContent, Vector2Int>(new BoardContent(){Health = 4, visualInfo = new VisualInfo() { type = UnitType.HeavyTank}}, new Vector2Int(1,3)),
+      new Tuple<BoardContent, Vector2Int>(new BoardContent(){Health = 1, visualInfo = new VisualInfo() { type = UnitType.FastRocket}}, new Vector2Int(3,0)),
+    });
+    _grid.setBoard(_board);
+    _grid.setController(this);
     _systemPanels = FindObjectsOfType<SystemPanelScript>()
         .OrderBy((systemPanel) => systemPanel.gameObject.name)
         .ToList();
@@ -31,7 +38,7 @@ public class MainController : MonoBehaviour {
             system = new MechSystem() {
                 systemImageFilename = "1",
             },
-            currentAction = null
+            currentAction = new ShootLaserAction()
         },
     };
     for (int i = 0; i < _systemPanels.Count; ++i) {
@@ -49,6 +56,24 @@ public class MainController : MonoBehaviour {
     if (Input.GetMouseButtonDown(1)) {
       _selectedAction = null;
     }
+  }
+
+  public void TilePressed(Vector2Int tile) {
+    if (_selectedAction == null) {
+      return;
+    }
+    var effects = _selectedAction.actionEffects(_board, tile).ToList();
+    var oldBoard = _board;
+    _board = _board.NextBoard(effects);
+    _grid.ShowChanges(oldBoard.GetAllContent().Select(identifier => {
+      var change = new GridScript.Change();
+      change.startAt = oldBoard.positionOfContent(identifier);
+      change.isDestroyed = _board.getContent(identifier) == null;
+      if (!change.isDestroyed) {
+        change.moveTo = _board.positionOfContent(identifier);
+      }
+      return change;
+    }));
   }
 
   private void handleHighlights() {
