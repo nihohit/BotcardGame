@@ -123,7 +123,7 @@ public class Board {
       }
       contentInTile.Health -= effect.damage;
 
-      var maxValue = Math.Max(effect.move.x, effect.move.y);
+      var maxValue = Math.Max(Math.Abs(effect.move.x), Math.Abs(effect.move.y));
       var finalLocation = effect.position;
       for (int i = 1; i <= maxValue; ++i) {
         var adjustedMove = effect.move * i / maxValue;
