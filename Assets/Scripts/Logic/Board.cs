@@ -5,6 +5,26 @@ using System;
 
 public enum UnitType { Cannon, FastRocket, FastLargeTank, HeavyHoverTank, HeavyTank, HoverTank, LargeTank, Plane, Rocket, SmallTank, Tank, WalkingCannon };
 
+public class ContentChanges {
+  public List<Guid> initiallyDamaged = new List<Guid>();
+  public List<Guid> initiallyDestroyed = new List<Guid>();
+
+  public List<Guid> moved = new List<Guid>();
+  public List<Guid> damagedInMove = new List<Guid>();
+  public List<Guid> destroyedInMove = new List<Guid>();
+}
+
+public class BoardAndChanges {
+
+  public void Deconstruct(out Board board, out ContentChanges changes) {
+    board = this.board;
+    changes = this.changes;
+
+  }
+  public Board board;
+  public ContentChanges changes;
+}
+
 public class VisualInfo {
   public UnitType type;
 }
@@ -110,18 +130,27 @@ public class Board {
           position.y < ySize;
   }
 
-  public Board NextBoard(IEnumerable<ActionEffect> effects) {
+  public BoardAndChanges NextBoard(IEnumerable<ActionEffect> effects) {
     var nextBoard = new Board();
     nextBoard.content = copyBoard();
     nextBoard.positions = positions.ToDictionary(entry => entry.Key,
                                                  entry => entry.Value);
+    var changes = new ContentChanges();
 
     foreach (var effect in effects) {
       var contentInTile = ContentAt(effect.position);
       if (contentInTile is null) {
         continue;
       }
-      contentInTile.Health -= effect.damage;
+
+      if (effect.damage != 0.0f) {
+        changes.initiallyDamaged.Add(contentInTile.identifier);
+        contentInTile.Health -= effect.damage;
+      }
+      if (contentInTile.Health <= 0) {
+        changes.initiallyDestroyed.Add(contentInTile.identifier);
+        break;
+      }
 
       var maxValue = Math.Max(Math.Abs(effect.move.x), Math.Abs(effect.move.y));
       var finalLocation = effect.position;
@@ -135,14 +164,29 @@ public class Board {
         } else {
           var collided = nextBoard.ContentAt(position);
           collided.Health -= 1;
+          changes.damagedInMove.Add(collided.identifier);
+          if (collided.Health <= 0) {
+            changes.destroyedInMove.Add(collided.identifier);
+          }
           nextBoard.putContentAt(position, collided);
           contentInTile.Health -= 1;
+          changes.damagedInMove.Add(contentInTile.identifier);
+          if (contentInTile.Health <= 0) {
+            changes.destroyedInMove.Add(contentInTile.identifier);
+          }
           break;
         }
       }
+      if (finalLocation != effect.position) {
+        changes.moved.Add(contentInTile.identifier);
+      }
+
       nextBoard.putContentAt(effect.position, null);
       nextBoard.putContentAt(finalLocation, contentInTile);
     }
-    return nextBoard;
+    return new BoardAndChanges() {
+      board = nextBoard,
+      changes = changes
+    };
   }
 }

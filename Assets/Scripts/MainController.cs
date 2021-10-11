@@ -64,7 +64,8 @@ public class MainController : MonoBehaviour {
     }
     var effects = _selectedAction.actionEffects(_board, tile).ToList();
     var oldBoard = _board;
-    _board = _board.NextBoard(effects);
+    var (board, changes) = _board.NextBoard(effects);
+    _board = board;
     _grid.ShowChanges(oldBoard.GetAllContent().Select(identifier => {
       var change = new GridScript.Change();
       change.startAt = oldBoard.positionOfContent(identifier);

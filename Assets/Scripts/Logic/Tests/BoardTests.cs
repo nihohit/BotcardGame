@@ -59,12 +59,18 @@ class BoardTests {
       Health = 2
     };
     var size = new Vector2Int(4, 4);
-    var board = Board.CreateBoard(size, new[] {
+    var (board, changes) = Board.CreateBoard(size, new[] {
       Tuple.Create(content1, new Vector2Int(0, 1)),
       Tuple.Create(content2, new Vector2Int(2, 1)) }).NextBoard(new[] { new ActionEffect() {
         position = new Vector2Int(0, 1),
         move = new Vector2Int(0, 2)
       }});
+
+    CollectionAssert.AreEquivalent(new Guid[] { }, changes.initiallyDamaged);
+    CollectionAssert.AreEquivalent(new Guid[] { }, changes.initiallyDestroyed);
+    CollectionAssert.AreEqual(new[] { content1.identifier }, changes.moved);
+    CollectionAssert.AreEquivalent(new Guid[] { }, changes.damagedInMove);
+    CollectionAssert.AreEquivalent(new Guid[] { }, changes.destroyedInMove);
 
     Assert.That(board.getSize() == size);
     CollectionAssert.AreEqual(new[] { content1.identifier, content2.identifier }, board.GetAllContent());
@@ -97,12 +103,18 @@ class BoardTests {
       Health = 2
     };
     var size = new Vector2Int(4, 4);
-    var board = Board.CreateBoard(size, new[] {
+    var (board, changes) = Board.CreateBoard(size, new[] {
       Tuple.Create(content1, new Vector2Int(0, 1)),
       Tuple.Create(content2, new Vector2Int(2, 1)) }).NextBoard(new[] { new ActionEffect() {
         position = new Vector2Int(0, 1),
         move = new Vector2Int(-1, 0)
       }});
+
+    CollectionAssert.AreEquivalent(new Guid[] { }, changes.initiallyDamaged);
+    CollectionAssert.AreEquivalent(new Guid[] { }, changes.initiallyDestroyed);
+    CollectionAssert.AreEquivalent(new Guid[] { }, changes.moved);
+    CollectionAssert.AreEquivalent(new Guid[] { }, changes.damagedInMove);
+    CollectionAssert.AreEquivalent(new Guid[] { }, changes.destroyedInMove);
 
     Assert.That(board.getSize() == size);
     CollectionAssert.AreEqual(new[] { content1.identifier, content2.identifier }, board.GetAllContent());
@@ -127,7 +139,7 @@ class BoardTests {
   }
 
   [Test]
-  public void board_effects_move_damge_and_stop_on_collision() {
+  public void board_effects_move_damage_and_stop_on_collision() {
     var content1 = new BoardContent() {
       Health = 2
     };
@@ -135,12 +147,18 @@ class BoardTests {
       Health = 2
     };
     var size = new Vector2Int(4, 4);
-    var board = Board.CreateBoard(size, new[] {
+    var (board, changes) = Board.CreateBoard(size, new[] {
       Tuple.Create(content1, new Vector2Int(0, 1)),
       Tuple.Create(content2, new Vector2Int(2, 1)) }).NextBoard(new[] { new ActionEffect() {
         position = new Vector2Int(0, 1),
         move = new Vector2Int(2, 0)
       }});
+
+    CollectionAssert.AreEquivalent(new Guid[] { }, changes.initiallyDamaged);
+    CollectionAssert.AreEquivalent(new Guid[] { }, changes.initiallyDestroyed);
+    CollectionAssert.AreEquivalent(new Guid[] { content1.identifier }, changes.moved);
+    CollectionAssert.AreEquivalent(new Guid[] { content1.identifier, content2.identifier }, changes.damagedInMove);
+    CollectionAssert.AreEquivalent(new Guid[] { }, changes.destroyedInMove);
 
     Assert.That(board.getSize() == size);
     CollectionAssert.AreEqual(new[] { content1.identifier, content2.identifier }, board.GetAllContent());
@@ -173,12 +191,18 @@ class BoardTests {
       Health = 1
     };
     var size = new Vector2Int(4, 4);
-    var board = Board.CreateBoard(size, new[] {
+    var (board, changes) = Board.CreateBoard(size, new[] {
       Tuple.Create(content1, new Vector2Int(0, 1)),
       Tuple.Create(content2, new Vector2Int(2, 1)) }).NextBoard(new[] { new ActionEffect() {
         position = new Vector2Int(0, 1),
         move = new Vector2Int(2, 0)
       }});
+
+    CollectionAssert.AreEquivalent(new Guid[] { }, changes.initiallyDamaged);
+    CollectionAssert.AreEquivalent(new Guid[] { }, changes.initiallyDestroyed);
+    CollectionAssert.AreEquivalent(new Guid[] { content1.identifier }, changes.moved);
+    CollectionAssert.AreEquivalent(new Guid[] { content1.identifier, content2.identifier }, changes.damagedInMove);
+    CollectionAssert.AreEquivalent(new Guid[] { content2.identifier }, changes.destroyedInMove);
 
     Assert.That(board.getSize() == size);
     CollectionAssert.AreEqual(new[] { content1.identifier }, board.GetAllContent());
@@ -207,12 +231,18 @@ class BoardTests {
       Health = 2
     };
     var size = new Vector2Int(4, 4);
-    var board = Board.CreateBoard(size, new[] {
+    var (board, changes) = Board.CreateBoard(size, new[] {
       Tuple.Create(content1, new Vector2Int(0, 1)),
       Tuple.Create(content2, new Vector2Int(2, 1)) }).NextBoard(new[] { new ActionEffect() {
         position = new Vector2Int(2, 1),
         damage = 1
       }});
+
+    CollectionAssert.AreEquivalent(new Guid[] { content2.identifier }, changes.initiallyDamaged);
+    CollectionAssert.AreEquivalent(new Guid[] { }, changes.initiallyDestroyed);
+    CollectionAssert.AreEquivalent(new Guid[] { }, changes.moved);
+    CollectionAssert.AreEquivalent(new Guid[] { }, changes.damagedInMove);
+    CollectionAssert.AreEquivalent(new Guid[] { }, changes.destroyedInMove);
 
     Assert.That(board.getSize() == size);
     CollectionAssert.AreEqual(new[] { content1.identifier, content2.identifier }, board.GetAllContent());
@@ -245,7 +275,7 @@ class BoardTests {
       Health = 2
     };
     var size = new Vector2Int(4, 4);
-    var board = Board.CreateBoard(size, new[] {
+    var (board, changes) = Board.CreateBoard(size, new[] {
       Tuple.Create(content1, new Vector2Int(0, 1)),
       Tuple.Create(content2, new Vector2Int(2, 1)) }).NextBoard(new[] { new ActionEffect() {
         position = new Vector2Int(2, 1),
@@ -256,6 +286,12 @@ class BoardTests {
         damage = 1,
         move = new Vector2Int(0, 2)
       }});
+
+    CollectionAssert.AreEquivalent(new Guid[] { content1.identifier, content2.identifier }, changes.initiallyDamaged);
+    CollectionAssert.AreEquivalent(new Guid[] { }, changes.initiallyDestroyed);
+    CollectionAssert.AreEquivalent(new Guid[] { content1.identifier }, changes.moved);
+    CollectionAssert.AreEquivalent(new Guid[] { }, changes.damagedInMove);
+    CollectionAssert.AreEquivalent(new Guid[] { }, changes.destroyedInMove);
 
     Assert.That(board.getSize() == size);
     CollectionAssert.AreEqual(new[] { content1.identifier, content2.identifier }, board.GetAllContent());
