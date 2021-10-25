@@ -149,6 +149,7 @@ public class Board {
       }
       if (contentInTile.Health <= 0) {
         changes.initiallyDestroyed.Add(contentInTile.identifier);
+        nextBoard.putContentAt(effect.position, contentInTile);
         break;
       }
 
