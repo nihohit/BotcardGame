@@ -30,10 +30,13 @@ public static class GameObjectExtensions {
     }
   }
 
-  public static IEnumerator ScaleOverSpeed(this GameObject objectToMove, Vector3 end, float speed, System.Action continuation = null) {
+  public static IEnumerator ScaleOverSeconds(this GameObject objectToMove, Vector3 end, float seconds, System.Action continuation = null) {
     // speed should be 1 unit per second
-    while (objectToMove.transform.localScale != end) {
-      objectToMove.transform.localScale += Vector3.MoveTowards(objectToMove.transform.localScale, end, speed * Time.deltaTime);
+    float elapsedTime = 0;
+    Vector3 startingPos = objectToMove.transform.localScale;
+    while (elapsedTime < seconds) {
+      objectToMove.transform.localScale = Vector3.Lerp(startingPos, end, (elapsedTime / seconds));
+      elapsedTime += Time.deltaTime;
       yield return new WaitForEndOfFrame();
     }
 
