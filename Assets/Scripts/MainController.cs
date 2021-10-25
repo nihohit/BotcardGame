@@ -58,23 +58,32 @@ public class MainController : MonoBehaviour {
     }
   }
 
+  private IEnumerable<GridScript.Change> createGridChanges(Board oldBoard, ContentChanges boardChanges, Board newBoard) {
+    foreach (var identifier in oldBoard.GetAllContent()) {
+      var change = new GridScript.Change();
+      change.startAt = oldBoard.positionOfContent(identifier);
+      var newContent = newBoard.getContent(identifier);
+      change.isDestroyed = newContent == null;
+      if (!boardChanges.moved.TryGetValue(identifier, out var position)) {
+        position = oldBoard.positionOfContent(identifier);
+      }
+      change.moveTo = position;
+      change.isDamaged = !change.isDestroyed && oldBoard.getContent(identifier).Health != newContent.Health;
+      if (change.somethingChanged()) {
+        yield return change;
+      }
+    }
+  }
+
   public void TilePressed(Vector2Int tile) {
     if (_selectedAction == null) {
       return;
     }
     var effects = _selectedAction.actionEffects(_board, tile).ToList();
     var oldBoard = _board;
-    var (board, changes) = _board.NextBoard(effects);
-    _board = board;
-    _grid.ShowChanges(oldBoard.GetAllContent().Select(identifier => {
-      var change = new GridScript.Change();
-      change.startAt = oldBoard.positionOfContent(identifier);
-      change.isDestroyed = _board.getContent(identifier) == null;
-      if (!change.isDestroyed) {
-        change.moveTo = _board.positionOfContent(identifier);
-      }
-      return change;
-    }));
+    var (newBoard, changes) = _board.NextBoard(effects);
+    _board = newBoard;
+    _grid.ShowChanges(createGridChanges(oldBoard, changes, newBoard));
   }
 
   private void handleHighlights() {

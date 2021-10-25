@@ -16,6 +16,16 @@ public class GridScript : MonoBehaviour {
     public Vector2Int moveTo;
 
     public bool isDestroyed;
+
+    public bool isDamaged;
+
+    public bool moved() {
+      return startAt != moveTo;
+    }
+
+    public bool somethingChanged() {
+      return isDestroyed || isDamaged || moved();
+    }
   }
 
 
@@ -101,15 +111,31 @@ public class GridScript : MonoBehaviour {
   }
 
   public void ShowChanges(IEnumerable<Change> changes) {
-    var newPositions = new Dictionary<Vector2Int, GameObject>();
+    var newPositions = new Dictionary<Vector2Int, GameObject>(_unitLocations);
     foreach (var change in changes) {
       var content = _unitLocations[change.startAt];
-      if (change.isDestroyed) {
-        GameObject.Destroy(content);
-        continue;
+      var finalPosition = cellToWorld(change.moveTo);
+      System.Action nonMoveAnimation = () => {
+        if (change.isDamaged) {
+
+        } else if (change.isDestroyed) {
+          var explosion = _highlightFactory.GetHighlight(Highlights.Explosion);
+          explosion.transform.position = finalPosition;
+          explosion.transform.localScale = Vector3.zero;
+          StartCoroutine(explosion.ScaleOverSeconds(new Vector3(0.2f, 0.2f, 0.2f), 0.7f, () => {
+            _highlightFactory.ReturnHighlight(explosion);
+            GameObject.Destroy(content);
+          }));
+        }
+      };
+      if (change.moved()) {
+        StartCoroutine(content.MoveOverSpeed(finalPosition, 0.9f, nonMoveAnimation));
+      } else {
+        nonMoveAnimation();
       }
-      content.transform.position = cellToWorld(change.moveTo);
-      newPositions[change.moveTo] = content;
+      if (!change.isDestroyed) {
+        newPositions[change.moveTo] = content;
+      }
     }
     _unitLocations = newPositions;
   }
