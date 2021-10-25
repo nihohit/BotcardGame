@@ -9,7 +9,7 @@ public class ContentChanges {
   public List<Guid> initiallyDamaged = new List<Guid>();
   public List<Guid> initiallyDestroyed = new List<Guid>();
 
-  public List<Guid> moved = new List<Guid>();
+  public Dictionary<Guid, Vector2Int> moved = new Dictionary<Guid, Vector2Int>();
   public List<Guid> damagedInMove = new List<Guid>();
   public List<Guid> destroyedInMove = new List<Guid>();
 }
@@ -178,7 +178,7 @@ public class Board {
         }
       }
       if (finalLocation != effect.position) {
-        changes.moved.Add(contentInTile.identifier);
+        changes.moved[contentInTile.identifier] = finalLocation;
       }
 
       nextBoard.putContentAt(effect.position, null);

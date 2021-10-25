@@ -66,15 +66,16 @@ class BoardTests {
         move = new Vector2Int(0, 2)
       }});
 
+    var expectedPosition1 = new Vector2Int(0, 3);
     CollectionAssert.AreEquivalent(new Guid[] { }, changes.initiallyDamaged);
     CollectionAssert.AreEquivalent(new Guid[] { }, changes.initiallyDestroyed);
-    CollectionAssert.AreEqual(new[] { content1.identifier }, changes.moved);
+    CollectionAssert.AreEqual(new Dictionary<Guid, Vector2Int> { { content1.identifier, expectedPosition1 } }, changes.moved);
     CollectionAssert.AreEquivalent(new Guid[] { }, changes.damagedInMove);
     CollectionAssert.AreEquivalent(new Guid[] { }, changes.destroyedInMove);
 
     Assert.That(board.getSize() == size);
     CollectionAssert.AreEqual(new[] { content1.identifier, content2.identifier }, board.GetAllContent());
-    Assert.That(board.positionOfContent(content1.identifier) == new Vector2Int(0, 3));
+    Assert.That(board.positionOfContent(content1.identifier) == expectedPosition1);
     Assert.That(board.positionOfContent(content2.identifier) == new Vector2Int(2, 1));
 
     for (int i = 0; i < size.x; ++i) {
@@ -112,7 +113,7 @@ class BoardTests {
 
     CollectionAssert.AreEquivalent(new Guid[] { }, changes.initiallyDamaged);
     CollectionAssert.AreEquivalent(new Guid[] { }, changes.initiallyDestroyed);
-    CollectionAssert.AreEquivalent(new Guid[] { }, changes.moved);
+    CollectionAssert.AreEquivalent(new Dictionary<Guid, Vector2Int> { }, changes.moved);
     CollectionAssert.AreEquivalent(new Guid[] { }, changes.damagedInMove);
     CollectionAssert.AreEquivalent(new Guid[] { }, changes.destroyedInMove);
 
@@ -154,15 +155,16 @@ class BoardTests {
         move = new Vector2Int(2, 0)
       }});
 
+    var expectedPosition1 = new Vector2Int(1, 1);
     CollectionAssert.AreEquivalent(new Guid[] { }, changes.initiallyDamaged);
     CollectionAssert.AreEquivalent(new Guid[] { }, changes.initiallyDestroyed);
-    CollectionAssert.AreEquivalent(new Guid[] { content1.identifier }, changes.moved);
+    CollectionAssert.AreEquivalent(new Dictionary<Guid, Vector2Int> { { content1.identifier, expectedPosition1 } }, changes.moved);
     CollectionAssert.AreEquivalent(new Guid[] { content1.identifier, content2.identifier }, changes.damagedInMove);
     CollectionAssert.AreEquivalent(new Guid[] { }, changes.destroyedInMove);
 
     Assert.That(board.getSize() == size);
     CollectionAssert.AreEqual(new[] { content1.identifier, content2.identifier }, board.GetAllContent());
-    Assert.That(board.positionOfContent(content1.identifier) == new Vector2Int(1, 1));
+    Assert.That(board.positionOfContent(content1.identifier) == expectedPosition1);
     Assert.That(board.positionOfContent(content2.identifier) == new Vector2Int(2, 1));
 
     for (int i = 0; i < size.x; ++i) {
@@ -183,7 +185,7 @@ class BoardTests {
   }
 
   [Test]
-  public void board_effects_destroy_units_with_no_health() {
+  public void board_effects_destroy_units_with_no_health_after_collision() {
     var content1 = new BoardContent() {
       Health = 2
     };
@@ -198,15 +200,17 @@ class BoardTests {
         move = new Vector2Int(2, 0)
       }});
 
+    var expectedPosition1 = new Vector2Int(1, 1);
     CollectionAssert.AreEquivalent(new Guid[] { }, changes.initiallyDamaged);
     CollectionAssert.AreEquivalent(new Guid[] { }, changes.initiallyDestroyed);
-    CollectionAssert.AreEquivalent(new Guid[] { content1.identifier }, changes.moved);
+    CollectionAssert.AreEquivalent(new Dictionary<Guid, Vector2Int> { { content1.identifier, expectedPosition1 } }, changes.moved);
     CollectionAssert.AreEquivalent(new Guid[] { content1.identifier, content2.identifier }, changes.damagedInMove);
     CollectionAssert.AreEquivalent(new Guid[] { content2.identifier }, changes.destroyedInMove);
 
     Assert.That(board.getSize() == size);
     CollectionAssert.AreEqual(new[] { content1.identifier }, board.GetAllContent());
-    Assert.That(board.positionOfContent(content1.identifier) == new Vector2Int(1, 1));
+    Assert.That(board.positionOfContent(content1.identifier) == expectedPosition1);
+    Assert.That(board.getContent(content2.identifier) == null);
 
     for (int i = 0; i < size.x; ++i) {
       for (int j = 0; j < size.y; ++j) {
@@ -240,7 +244,7 @@ class BoardTests {
 
     CollectionAssert.AreEquivalent(new Guid[] { content2.identifier }, changes.initiallyDamaged);
     CollectionAssert.AreEquivalent(new Guid[] { }, changes.initiallyDestroyed);
-    CollectionAssert.AreEquivalent(new Guid[] { }, changes.moved);
+    CollectionAssert.AreEquivalent(new Dictionary<Guid, Vector2Int> { }, changes.moved);
     CollectionAssert.AreEquivalent(new Guid[] { }, changes.damagedInMove);
     CollectionAssert.AreEquivalent(new Guid[] { }, changes.destroyedInMove);
 
@@ -287,15 +291,16 @@ class BoardTests {
         move = new Vector2Int(0, 2)
       }});
 
+    var expectedPosition1 = new Vector2Int(0, 3);
     CollectionAssert.AreEquivalent(new Guid[] { content1.identifier, content2.identifier }, changes.initiallyDamaged);
     CollectionAssert.AreEquivalent(new Guid[] { }, changes.initiallyDestroyed);
-    CollectionAssert.AreEquivalent(new Guid[] { content1.identifier }, changes.moved);
+    CollectionAssert.AreEquivalent(new Dictionary<Guid, Vector2Int> { { content1.identifier, expectedPosition1 } }, changes.moved);
     CollectionAssert.AreEquivalent(new Guid[] { }, changes.damagedInMove);
     CollectionAssert.AreEquivalent(new Guid[] { }, changes.destroyedInMove);
 
     Assert.That(board.getSize() == size);
     CollectionAssert.AreEqual(new[] { content1.identifier, content2.identifier }, board.GetAllContent());
-    Assert.That(board.positionOfContent(content1.identifier) == new Vector2Int(0, 3));
+    Assert.That(board.positionOfContent(content1.identifier) == expectedPosition1);
     Assert.That(board.positionOfContent(content2.identifier) == new Vector2Int(2, 1));
 
     for (int i = 0; i < size.x; ++i) {
