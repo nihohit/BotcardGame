@@ -23,7 +23,8 @@ public enum Highlights {
   MoveTwiceDown,
   MoveTwiceLeft,
   MoveTwiceRight,
-  MoveTwiceUp
+  MoveTwiceUp,
+  Explosion
 }
 
 public class ActionEffect {

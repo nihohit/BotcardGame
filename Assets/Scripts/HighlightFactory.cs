@@ -23,6 +23,7 @@ public class HighlightFactory : MonoBehaviour {
   { Highlights.MoveTwiceDown, "double_arrow_down_left" },
   { Highlights.MoveTwiceUp, "double_arrow_up_right" },
   { Highlights.MoveTwiceLeft, "double_arrow_up_left" },
+  { Highlights.Explosion, "explosion" },
 };
   private readonly Dictionary<Highlights, Queue<GameObject>> _highlights = new Dictionary<Highlights, Queue<GameObject>>();
 
