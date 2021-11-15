@@ -10,6 +10,7 @@ public class MainController : MonoBehaviour {
   private GridScript _grid;
   private Action _selectedAction;
   private List<SystemState> _systems;
+  private EnemyCoordinator _coordinator = new EnemyCoordinator();
 
   // Start is called before the first frame update
   void Start() {
